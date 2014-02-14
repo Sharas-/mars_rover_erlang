@@ -1,3 +1,7 @@
+%%%--------------------------------------------------------------------- 
+%%% @doc Rover implementation. 
+%%% Rover only executes movement commands. It is stateless and does not track its own position.
+%%%--------------------------------------------------------------------- 
 -module(rover).
 -export([init/1, execute_moves/1]).
 
@@ -19,6 +23,8 @@ init(CollisionDetector) ->
 -spec execute_moves(nonempty_list()) -> {ack|nack, list()}.
 execute_moves(Movements) ->
 	execute_moves(Movements, [], erlang:get(collision_detector)).
+ 
+%--- private ---
 
 execute_moves([CurrMovement | Remaining], Moved, Collision_detector) ->
 	case Collision_detector(lists:reverse(Moved)) of
@@ -31,7 +37,6 @@ execute_moves([CurrMovement | Remaining], Moved, Collision_detector) ->
 execute_moves([], Moved, _) ->
 	{ack, lists:reverse(Moved)}.
 
- %--- private ---
 
 move($F)->
 	forward_ok;
@@ -40,6 +45,4 @@ move($B)->
 move($L)->
 	left_ok;
 move($R)->
-	right_ok;
-move(_) ->
-	unknown_command.
+	right_ok.

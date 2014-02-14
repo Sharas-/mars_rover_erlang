@@ -1,14 +1,10 @@
 %%%--------------------------------------------------------------------- 
-%%% @doc fnctions to calculate objects' position on a grid
+%%% @doc functions to calculate objects' position on a grid
 %%%--------------------------------------------------------------------- 
 
 -module(grid_positioning).
 -export([move_forward/2, move_back/2, turn_left/1, turn_right/1]).
-
--type coords():: {pos_integer(), pos_integer()}.
--type grid_def():: coords().
--type direction():: east | west | north | south.
--type position():: {coords(), direction()}.
+-include("include/grid_positioning.hrl").
 
 %%----------------------------------------------------------------------
 %% Purpose:	Calculates objets' position after it moves forward
@@ -17,8 +13,8 @@
 %% Returns:	New position of the object
 %%----------------------------------------------------------------------
 -spec move_forward(grid_def(), position()) -> position().
-move_forward({GridX, GridY}, {X, Y, Direction}) ->
-	move({GridX, GridY}, {X, Y, Direction}, 1).
+move_forward(GridDef, Position) ->
+	move(GridDef, Position, 1).
 
 %%----------------------------------------------------------------------
 %% Purpose:	Calculates objets' position after it moves back
@@ -27,8 +23,8 @@ move_forward({GridX, GridY}, {X, Y, Direction}) ->
 %% Returns:	New position of the object
 %%----------------------------------------------------------------------
 -spec move_back(grid_def(), position()) -> position().
-move_back({GridX, GridY}, {X, Y, Direction}) ->
-	move({GridX, GridY}, {X, Y, Direction}, -1).
+move_back(GridDef, Position) ->
+	move(GridDef, Position, -1).
 
 %%----------------------------------------------------------------------
 %% Purpose:	Calculates objets' direction after it turns left
@@ -52,8 +48,8 @@ turn_right(Direction) ->
 %--------------- private functions ---------------------------------
 
 -spec move(grid_def(), position(), 1|-1) -> position().
-move({GridX, GridY}, {X, Y, Direction}, Dir) ->
-	{wrap(X + (Dir * forward_x_change(Direction)), GridX), wrap(Y + (Dir * forward_y_change(Direction)), GridY)}.
+move({GridX, GridY}, {{X, Y}, Direction}, Dir) ->
+	{{wrap(X + (Dir * forward_x_change(Direction)), GridX), wrap(Y + (Dir * forward_y_change(Direction)), GridY)}, Direction}.
 
 %%----------------------------------------------------------------------
 %% Purpose:	Calculates how forward move affects Y coordinate
