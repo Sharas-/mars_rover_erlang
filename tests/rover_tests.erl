@@ -3,13 +3,16 @@
 -compile(export_all).
 
 move_FBLLFFRF_test()->
-	rover:init(fun(_) -> false end),
-	?assertEqual({ack, "FBLLFFRF"}, rover:execute_moves("FBLLFFRF")).
+	{ok, Pid} = rover:start(fun(_) -> false end),
+	?assertEqual({ack, "FBLLFFRF"}, rover:execute_moves("FBLLFFRF", Pid)),
+	rover:stop(Pid).
 
 collision_after_FLFRRB_test()->
-	rover:init(fun(Path) -> Path == "FLFRRB" end),
-	?assertEqual({nack, "FLFRRB"}, rover:execute_moves("FLFRRBFFF")).
+	{ok, Pid} = rover:start(fun(Path) -> Path == "FLFRRB" end),
+	?assertEqual({nack, "FLFRRB"}, rover:execute_moves("FLFRRBFFF", Pid)),
+	rover:stop(Pid).
 
 collision_after_FBLLFFRF_test()->
-	rover:init(fun(Path) -> Path == "FBLLFFRF" end),
-	?assertEqual({nack, "FBLLFFRF"}, rover:execute_moves("FBLLFFRFLFRRB")).
+	{ok, Pid} = rover:start(fun(Path) -> Path == "FBLLFFRF" end),
+	?assertEqual({nack, "FBLLFFRF"}, rover:execute_moves("FBLLFFRFLFRRB", Pid)),
+	rover:stop(Pid).
